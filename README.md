@@ -68,3 +68,46 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `yarn build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+
+<!-- 
+
+[
+ {
+  "title": "Essie Rodriguez",
+  "imageUrl": "./img/sneakers/1.jpg",
+  "price": 57,
+  "id": "1"
+ },
+ {
+  "title": "Dixie Walter Sr.",
+  "imageUrl": "./img/sneakers/1.jpg",
+  "price": 4,
+  "id": "2"
+ },
+ {
+  "title": "Brittany O'Conner",
+  "imageUrl": "./img/sneakers/2.jpg",
+  "price": 43,
+  "id": "3"
+ },
+ {
+  "title": "Courtney Collier",
+  "imageUrl": "./img/sneakers/3.jpg",
+  "price": 16,
+  "id": "4"
+ },
+ {
+  "title": "Janice Stokes IV",
+  "imageUrl": "./img/sneakers/4.jpg",
+  "price": 66,
+  "id": "5"
+ },
+ {
+  "title": "Mrs. Irene Crist",
+  "imageUrl": "./img/sneakers/6.jpg",
+  "price": 73,
+  "id": "6"
+ }
+] -->

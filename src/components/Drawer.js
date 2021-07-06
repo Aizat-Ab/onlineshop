@@ -1,14 +1,48 @@
-function Drawer({ onClose, items = [] }) {
+import React from 'react';
+import './drawer.scss';
+import Modal from './modal';
+import empty from '../assets/empty.png';
+import order from '../assets/order.jpg';
+import axios from 'axios';
+
+const delay = (ms) => new Promise((resolve )=> setTimeout(resolve, ms)) 
+
+function Drawer({ cartOpened, onRemove, onClose, items = [], setCartItems, cartItems }) {
+  const [isOrder, setIsOrder] = React.useState(false);
+  const [orderId, setOrderId] = React.useState(null);
+  
+  const totalPrice = cartItems.reduce((sum, obj) => obj.price + sum, 0)
+
+  const onClickOrder = async()=> {
+   try {
+    const {data} = await axios.post('https://60d4148561160900173ca47f.mockapi.io/orders', {
+      items : cartItems
+    });
+    setOrderId(data.id);
+    setIsOrder(true);
+    setCartItems([]);
+
+    for (let index = 0; index < cartItems.length; index++) {
+      const item = cartItems[index];
+        await axios.delete('https://60d4148561160900173ca47f.mockapi.io/orders/' + item.id)
+        await delay(1000)
+    }
+   } catch (error) {
+     alert('Не удалось создать заказ!')
+   }
+  }
+
   return (
     <div className="overlay">
       <div className="drawer">
         <h2 className="d-flex justify-between mb-30">
-          Корзина <img onClick={onClose} className="cu-p" src="/img/btn-remove.svg" alt="Close" />
+          Корзина <img onClick={()=>onClose()} className="cu-p" src="/img/btn-remove.svg" alt="Close" />
         </h2>
-
-        <div className="items">
+        {items.length > 0 ? (
+          <div className='d-flex flex-column flex'>
+            <div className="items">
           {items.map((obj) => (
-            <div className="cartItem d-flex align-center mb-20">
+            <div key={obj.id} className="cartItem d-flex align-center mb-20">
               <div
                 style={{ backgroundImage: `url(${obj.imageUrl})` }}
                 className="cartItemImg"></div>
@@ -17,28 +51,34 @@ function Drawer({ onClose, items = [] }) {
                 <p className="mb-5">{obj.title}</p>
                 <b>{obj.price} руб.</b>
               </div>
-              <img className="removeBtn" src="/img/btn-remove.svg" alt="Remove" />
+              <img onClick={()=> onRemove(obj.id)} className="removeBtn" src="/img/btn-remove.svg" alt="Remove" />
             </div>
           ))}
         </div>
-
         <div className="cartTotalBlock">
-          <ul>
-            <li>
-              <span>Итого:</span>
-              <div></div>
-              <b>21 498 руб. </b>
-            </li>
-            <li>
-              <span>Налог 5%:</span>
-              <div></div>
-              <b>1074 руб. </b>
-            </li>
-          </ul>
-          <button className="greenButton">
-            Оформить заказ <img src="/img/arrow.svg" alt="Arrow" />
-          </button>
-        </div>
+        <ul>
+          <li>
+            <span>Итого:</span>
+            <div></div>
+            <b>{totalPrice} руб. </b>
+          </li>
+          <li>
+            <span>Налог 5%:</span>
+            <div></div>
+            <b>{parseInt(totalPrice) / 100 * 5} руб. </b>
+          </li>
+        </ul>
+        <button onClick={onClickOrder} className="greenButton">
+          Оформить заказ <img src="/img/arrow.svg" alt="Arrow" />
+        </button>
+      </div>
+          </div>
+        ) : (<Modal onClose={onClose} 
+          title={isOrder ? '' : 'Empty' }
+          subTitle= {isOrder ? 'Заказ оформлен!' : 'Корзина пустая' }
+          description={isOrder ? `Ваш заказ #${orderId} скоро будет передан курьерской доставке` :'Добавьте хотя бы одну пару кроссовок, чтобы сделать заказ.'} 
+          image={isOrder ? {} : {empty}}/>)
+        }
       </div>
     </div>
   );
